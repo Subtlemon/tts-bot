@@ -1,7 +1,10 @@
 import discord
+import os
 
+from dotenv import load_dotenv
 
-TOKEN = 'ODQzMzU3MDQ3MTkyOTQ0NzA5.YKCrdA.DFAoLq0kf7_5-L2S5VoeSW74Cl0'
+load_dotenv()
+TOKEN = os.getenv('DISCORD_TOKEN')
 
 
 def main():

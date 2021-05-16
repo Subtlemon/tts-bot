@@ -13,6 +13,7 @@
 ### Prerequisites
 
 * Anaconda3
+* `sudo apt-get install ffmpeg`
 
 ### Import environment
 

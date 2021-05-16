@@ -1,8 +1,8 @@
 from discord.ext import commands
 
 
-@commands.command(name='join')
-async def joinAuthorVoiceChannel(ctx):
+@commands.command()
+async def join(ctx):
     '''Joins the voice channel of the context's author.'''
     if not ctx.author.voice:
         return await ctx.send('You are not in a voice channel!')
@@ -22,5 +22,5 @@ async def leave(ctx):
 
 
 def setup(bot):
-    bot.add_command(joinAuthorVoiceChannel)
+    bot.add_command(join)
     bot.add_command(leave)

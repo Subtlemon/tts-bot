@@ -1,7 +1,6 @@
-import discord
 import os
 
-from discord.ext.commands import Bot
+from discord.ext import commands
 from dotenv import load_dotenv
 
 
@@ -10,14 +9,7 @@ TOKEN = os.getenv('DISCORD_TOKEN')
 
 
 def main():
-    intents = discord.Intents.default()
-    bot = Bot(intents=intents, command_prefix='\'')
-
-
-    @bot.command()
-    async def hello(ctx):
-        await ctx.send('Hello!')
-
+    bot = commands.Bot(command_prefix='\'')
 
     @bot.event
     async def on_ready():

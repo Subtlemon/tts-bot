@@ -15,15 +15,15 @@ VOICES = ['en', 'fr', 'it', 'ja']
 
 class TextToSpeech(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
-        self.store = LocalStore(LOCALSTORE_PATH)
+        self._bot = bot
+        self._store = LocalStore(LOCALSTORE_PATH)
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author == self.bot.user:
+        if message.author == self._bot.user:
             return
         if message.content.startswith("' "):
-            ctx = await self.bot.get_context(message)
+            ctx = await self._bot.get_context(message)
             await self._say(ctx, message.content)
 
     @commands.command()
@@ -54,7 +54,7 @@ class TextToSpeech(commands.Cog):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')
 
-        speech = gTTS(text, lang=VOICES[self.store.get_voice(ctx.channel.id, ctx.author.id)])
+        speech = gTTS(text, lang=VOICES[self._store.get_voice(ctx.channel.id, ctx.author.id)])
         file_path = f's_{uuid.uuid1()}.mp3'
         speech.save(file_path)
         new_source = ResourceOwningSource(FFmpegPCMAudio(file_path), file_path)
@@ -81,7 +81,7 @@ class TextToSpeech(commands.Cog):
             return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
         if voice_id < 0 or voice_id >= len(VOICES):
             return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
-        self.store.set_voice(ctx.channel.id, ctx.author.id, voice_id)
+        self._store.set_voice(ctx.channel.id, ctx.author.id, voice_id)
 
 
 def setup(bot: commands.Bot):

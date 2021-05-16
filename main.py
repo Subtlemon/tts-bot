@@ -15,7 +15,7 @@ def main():
     async def on_ready():
         print(f'Bot has logged in as {bot.user}.')
 
-    bot.load_extension('extensions.vc')
+    bot.load_extension('cogs.tts')
     bot.run(TOKEN)
 
 

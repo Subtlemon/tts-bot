@@ -8,7 +8,7 @@ from gtts import gTTS
 
 
 @commands.command()
-async def join(ctx):
+async def join(ctx: commands.Context):
     '''Joins the voice channel of the context's author.'''
     if not ctx.author.voice:
         return await ctx.send('You are not in a voice channel!')
@@ -18,7 +18,7 @@ async def join(ctx):
 
 
 @commands.command()
-async def leave(ctx):
+async def leave(ctx: commands.Context):
     '''Leaves current voice channel.'''
     if not ctx.guild.voice_client:
         return await ctx.send('I was not in a voice channel')
@@ -28,7 +28,7 @@ async def leave(ctx):
 
 
 @commands.command()
-async def say(ctx, *, text):
+async def say(ctx: commands.Context, *, text):
     if not ctx.author.voice:
         return await ctx.send('You are not in a voice channel!')
 
@@ -52,7 +52,7 @@ async def say(ctx, *, text):
             voice.play(ComposablePCM(new_source))
 
 
-def setup(bot):
+def setup(bot: commands.Bot):
     bot.add_command(join)
     bot.add_command(leave)
     bot.add_command(say)

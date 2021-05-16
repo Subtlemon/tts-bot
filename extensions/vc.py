@@ -1,3 +1,7 @@
+import uuid
+
+from audio_sources.composable_pcm import ComposablePCM
+from audio_sources.resource_owning_source import ResourceOwningSource
 from discord import FFmpegPCMAudio
 from discord.ext import commands
 from gtts import gTTS
@@ -30,7 +34,9 @@ async def say(ctx, text):
 
     print(text)
     speech = gTTS(text)
-    speech.save('speech.mp3')
+    file_path = f's_{uuid.uuid1()}.mp3'
+    speech.save(file_path)
+    new_source = ResourceOwningSource(FFmpegPCMAudio(file_path), file_path)
 
     voice_channel = ctx.author.voice.channel
     try:
@@ -39,7 +45,11 @@ async def say(ctx, text):
         pass
     voice = ctx.guild.voice_client
     if not voice.is_playing():
-        voice.play(FFmpegPCMAudio('speech.mp3'))
+        voice.play(ComposablePCM(new_source))
+    else:
+        if not voice.source.add_source(new_source):
+            voice.stop()
+            voice.play(ComposablePCM(new_source))
 
 
 def setup(bot):

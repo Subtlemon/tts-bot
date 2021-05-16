@@ -17,6 +17,14 @@ class TextToSpeech(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author == self.bot.user:
+            return
+        if message.content.startswith("' "):
+            ctx = await self.bot.get_context(message)
+            await self._say(ctx, message.content)
+
     @commands.command()
     async def join(self, ctx: commands.Context):
         '''Joins the voice channel of the context's author.'''

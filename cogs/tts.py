@@ -5,6 +5,12 @@ from audio_sources.resource_owning_source import ResourceOwningSource
 from discord import FFmpegPCMAudio
 from discord.ext import commands
 from gtts import gTTS
+from persistence.local_store import LocalStore
+
+
+LOCALSTORE_PATH = '.runtime_data/persistence.db'
+VOICES = ['en', 'fr', 'it', 'ja']
+
 
 
 class TextToSpeech(commands.Cog):
@@ -39,8 +45,8 @@ class TextToSpeech(commands.Cog):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')
 
-        print(text)
-        speech = gTTS(text)
+        store = LocalStore(LOCALSTORE_PATH)
+        speech = gTTS(text, lang=VOICES[store.get_voice(ctx.channel.id, ctx.author.id)])
         file_path = f's_{uuid.uuid1()}.mp3'
         speech.save(file_path)
         new_source = ResourceOwningSource(FFmpegPCMAudio(file_path), file_path)
@@ -57,6 +63,18 @@ class TextToSpeech(commands.Cog):
             if not voice.source.add_source(new_source):
                 voice.stop()
                 voice.play(ComposablePCM(new_source))
+
+
+    @commands.command()
+    async def setvoice(self, ctx: commands.Context, voice_id_str):
+        try:
+            voice_id = int(voice_id_str)
+        except ValueError:
+            return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
+        if voice_id < 0 or voice_id >= len(VOICES):
+            return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
+        store = LocalStore(LOCALSTORE_PATH)
+        store.set_voice(ctx.channel.id, ctx.author.id, voice_id)
 
 
 def setup(bot: commands.Bot):

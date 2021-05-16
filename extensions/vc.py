@@ -1,4 +1,6 @@
+from discord import FFmpegPCMAudio
 from discord.ext import commands
+from gtts import gTTS
 
 
 @commands.command()
@@ -21,6 +23,26 @@ async def leave(ctx):
     await ctx.send('Left voice channel!')
 
 
+@commands.command()
+async def say(ctx, text):
+    if not ctx.author.voice:
+        return await ctx.send('You are not in a voice channel!')
+
+    print(text)
+    speech = gTTS(text)
+    speech.save('speech.mp3')
+
+    voice_channel = ctx.author.voice.channel
+    try:
+        await voice_channel.connect()
+    except:
+        pass
+    voice = ctx.guild.voice_client
+    if not voice.is_playing():
+        voice.play(FFmpegPCMAudio('speech.mp3'))
+
+
 def setup(bot):
     bot.add_command(join)
     bot.add_command(leave)
+    bot.add_command(say)

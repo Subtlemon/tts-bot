@@ -1,0 +1,47 @@
+#!/bin/sh
+#
+# An example hook script to verify what is about to be committed.
+# Called by "git commit" with no arguments.  The hook should
+# exit with non-zero status after issuing an appropriate message if
+# it wants to stop the commit.
+
+if git rev-parse --verify HEAD >/dev/null 2>&1
+then
+	against=HEAD
+else
+	# Initial commit: diff against an empty tree object
+	against=4b825dc642cb6eb9a060e54bf8d69288fbee4904
+fi
+
+# Redirect output to stderr.
+exec 1>&2
+
+ROOT_DIR=$(git rev-parse --show-toplevel)
+
+# Pre-commit check for conda environment.
+ENVIRONMENT_FILE="${ROOT_DIR}/environment.yml"
+TMP_ENVIRONMENT_FILE="${ROOT_DIR}/.tmp_environment.yml"
+CURRENT_ENVIRONMENT=$(conda env export | grep -v "^prefix: ")
+if [ "${CURRENT_ENVIRONMENT}" != *"command not found"* ]; then
+	STORED_ENVIRONMENT=$(cat "${ENVIRONMENT_FILE}")
+	if [ "${CURRENT_ENVIRONMENT}" != "${STORED_ENVIRONMENT}" ]; then
+		# Diff by writing to a tmp file then deleting it.
+		echo "${CURRENT_ENVIRONMENT}" >> "${TMP_ENVIRONMENT_FILE}"
+		ENV_DIFF=$(diff "${ENVIRONMENT_FILE}" "${TMP_ENVIRONMENT_FILE}")
+		rm -f "${TMP_ENVIRONMENT_FILE}"
+		# Print error message.
+        ENVS=$(conda env list)
+		ERROR_MESSAGE="
+Error: Your current environment is not consistent with the environment.yml file:
+${ENV_DIFF}
+Tip: Ensure that the correct environment is activated.
+${ENVS}
+Please update the environment.yml file using the following command:
+  conda env export | grep -v \"^prefix: \" > environment.yml
+Alternatively, update your environment using the following command:
+  conda env create --force -f environment.yml
+"
+		echo "${ERROR_MESSAGE}"
+		exit 1
+	fi
+fi

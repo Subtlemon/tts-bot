@@ -133,3 +133,6 @@ dmypy.json
 
 # VSCode
 .vscode/
+
+# Runtime files
+.runtime_data/

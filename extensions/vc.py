@@ -28,7 +28,7 @@ async def leave(ctx):
 
 
 @commands.command()
-async def say(ctx, text):
+async def say(ctx, *, text):
     if not ctx.author.voice:
         return await ctx.send('You are not in a voice channel!')
 

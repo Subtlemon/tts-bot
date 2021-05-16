@@ -44,3 +44,17 @@ conda env export | grep -v "^prefix: " > environment.yml
 ```bash
 conda activate tts_bot
 ```
+
+## Discord Bot Setup
+
+### Create a Discord Bot
+
+Follow instructions online, such as https://realpython.com/how-to-make-a-discord-bot-python/.
+
+### Token
+
+Create a .env file in the root directory and put your token in it:
+```
+# .env
+DISCORD_TOKEN={your-bot-token}
+```

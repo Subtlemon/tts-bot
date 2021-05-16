@@ -52,7 +52,13 @@ async def say(ctx: commands.Context, *, text):
             voice.play(ComposablePCM(new_source))
 
 
+@commands.command()
+async def setvoice(ctx: commands.Context, voice):
+    voices = ['en', 'fr', 'it', 'ja']
+
+
 def setup(bot: commands.Bot):
     bot.add_command(join)
     bot.add_command(leave)
     bot.add_command(say)
+    bot.add_command(setvoice)

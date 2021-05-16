@@ -21,6 +21,7 @@ dependencies:
   - multidict=4.7.5=py39h07f9747_2
   - ncurses=6.2=he6710b0_1
   - openssl=1.1.1k=h27cfd23_0
+  - pickledb=0.9.2=py_0
   - pip=21.0.1=py39h06a4308_0
   - pycparser=2.20=pyh9f0ad1d_2
   - pynacl=1.4.0=py39h07f9747_2
@@ -44,4 +45,3 @@ dependencies:
     - idna==2.10
     - requests==2.25.1
     - urllib3==1.26.4
-

@@ -85,3 +85,7 @@ The default command key is `'`. To override this to another character, set the `
 ```
 DEV_CMD=!
 ```
+
+### Add bot to a server
+
+https://discord.com/api/oauth2/authorize?client_id=843357047192944709&permissions=3214336&scope=bot

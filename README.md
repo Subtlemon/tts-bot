@@ -64,7 +64,11 @@ GOOGLE_APPLICATION_CREDENTIALS={path to key file}
 
 ### Google Cloud Text-To-Speech
 
-We use the Google Cloud Text-To-Speech API. For local development, download service account credentials following [these instructions](https://cloud.google.com/text-to-speech/docs/libraries#setting_up_authentication) and point the GOOGLE_APPLICATION_CREDENTIALS environment variable to the downloaded file.
+We use the Google Cloud Text-To-Speech API. You must enable the API and set up authentication: https://cloud.google.com/text-to-speech/docs/quickstart-client-libraries#before-you-begin
+
+For local development, download service account credentials following [these instructions](https://cloud.google.com/text-to-speech/docs/libraries#setting_up_authentication) and point the GOOGLE_APPLICATION_CREDENTIALS environment variable to the downloaded file.
+
+If you are running the bot on Google Compute Engine, enable authenitcation by selecting "Allow full access to all Cloud APIs" during VM creation or while editing a stopped VM.
 
 ### Run the bot
 

@@ -10,7 +10,6 @@ from persistence.local_store import LocalStore
 
 
 LOCALSTORE_PATH = '.runtime_data/persistence.db'
-VOICES = ['en-US', 'en-AU', 'en-IN', 'ja', 'en-GB']
 
 
 def get_command_prefix():
@@ -26,6 +25,20 @@ class TextToSpeech(commands.Cog):
         self._bot = bot
         self._client = texttospeech.TextToSpeechClient()
         self._store = LocalStore(LOCALSTORE_PATH)
+        
+        neutral = texttospeech.enums.SsmlVoiceGender.NEUTRAL
+        male = texttospeech.enums.SsmlVoiceGender.MALE
+        female = texttospeech.enums.SsmlVoiceGender.FEMALE
+        def voice(lang: str, gender, name=None):
+            return texttospeech.types.VoiceSelectionParams(language_code=lang, name=name, ssml_gender=gender)
+        self._voices = [
+                voice(lang='en-US', gender=male),
+                voice(lang='en-AU', gender=neutral),
+                voice(lang='en-ID', gender=female),
+                voice(lang='ja', gender=female),
+                voice(lang='en-GB', gender=male),
+                voice(lang='yue-HK', gender=neutral),
+        ]
 
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -34,6 +47,7 @@ class TextToSpeech(commands.Cog):
         if message.content.startswith(f'{get_command_prefix()} '):
             ctx = await self._bot.get_context(message)
             await self._say(ctx, message.content)
+
 
     @commands.command()
     async def join(self, ctx: commands.Context):
@@ -59,13 +73,13 @@ class TextToSpeech(commands.Cog):
     async def say(self, ctx: commands.Context, *, text):
         await self._say(ctx, text)
 
+
     async def _say(self, ctx: commands.Context, text):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')
 
         synthesis_input = texttospeech.types.SynthesisInput(text=text)
-        lang = VOICES[self._store.get_voice(ctx.guild.id, ctx.author.id)]
-        voice = texttospeech.types.VoiceSelectionParams(language_code=lang, ssml_gender=texttospeech.enums.SsmlVoiceGender.NEUTRAL)
+        voice = self._voices[self._store.get_voice(ctx.guild.id, ctx.author.id)]
         audio_config = texttospeech.types.AudioConfig(audio_encoding=texttospeech.enums.AudioEncoding.LINEAR16)
         response = self._client.synthesize_speech(input_=synthesis_input, voice=voice, audio_config=audio_config)
         
@@ -93,9 +107,9 @@ class TextToSpeech(commands.Cog):
         try:
             voice_id = int(voice_id_str)
         except ValueError:
-            return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
-        if voice_id < 0 or voice_id >= len(VOICES):
-            return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
+            return await ctx.send(f'You provided an invalid voice ID. There are {len(self._voices)} voices.')
+        if voice_id < 0 or voice_id >= len(self._voices):
+            return await ctx.send(f'You provided an invalid voice ID. There are {len(self._voices)} voices.')
         self._store.set_voice(ctx.guild.id, ctx.author.id, voice_id)
 
 

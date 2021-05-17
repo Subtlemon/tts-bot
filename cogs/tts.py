@@ -35,25 +35,6 @@ class TextToSpeech(commands.Cog):
             except RateLimitException:
                 return await ctx.send(RATE_LIMIT_ERROR_MESSAGE)
 
-
-    @commands.command()
-    async def join(self, ctx: commands.Context):
-        '''Joins the voice channel of the context's author.'''
-        if not ctx.author.voice:
-            return await ctx.send('You are not in a voice channel!')
-
-        if ctx.guild.voice_client is not None and ctx.author.voice.channel.id != ctx.guild.voice_client.channel.id:
-            # Bot is in a different channel than the author.
-            if ctx.guild.voice_client.is_playing():
-                ctx.guild.voice_client.stop()
-            await ctx.guild.voice_client.disconnect()
-            await ctx.send(f'I am moving to {ctx.author.name}\'s channel.')
-        voice_channel = ctx.author.voice.channel
-        try:
-            await voice_channel.connect()
-        except:
-            pass
-
     @commands.command()
     async def leave(self, ctx: commands.Context):
         '''Leaves current voice channel.'''
@@ -75,7 +56,7 @@ class TextToSpeech(commands.Cog):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')
         if ctx.guild.voice_client is not None and ctx.author.voice.channel.id != ctx.guild.voice_client.channel.id:
-            return await ctx.send('You are not in the same voice channel as me!')
+            return await ctx.send('You are not in the same voice channel as me! You can make me leave the other channel using the `leave` command.')
         if len(text) > MAX_TEXT_SIZE:
             return await ctx.send(f'Text cannot be longer than {MAX_TEXT_SIZE} characters.')
 

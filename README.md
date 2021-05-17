@@ -59,3 +59,11 @@ Create a .env file in the root directory and put your token in it:
 # .env
 DISCORD_TOKEN={your-bot-token}
 ```
+
+### Run the bot
+
+From the root directory (same directory that this README is in), run:
+
+```
+python -m main
+```

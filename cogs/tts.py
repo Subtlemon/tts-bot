@@ -14,16 +14,16 @@ VOICES = ['en-US', 'en-AU', 'en-IN', 'ja', 'en-GB']
 
 class TextToSpeech(commands.Cog):
     def __init__(self, bot):
-        self.bot = bot
-        self.client = texttospeech.TextToSpeechClient()
-        self.store = LocalStore(LOCALSTORE_PATH)
+        self._bot = bot
+        self._client = texttospeech.TextToSpeechClient()
+        self._store = LocalStore(LOCALSTORE_PATH)
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author == self.bot.user:
+        if message.author == self._bot.user:
             return
         if message.content.startswith("' "):
-            ctx = await self.bot.get_context(message)
+            ctx = await self._bot.get_context(message)
             await self._say(ctx, message.content)
 
     @commands.command()
@@ -55,10 +55,10 @@ class TextToSpeech(commands.Cog):
             return await ctx.send('You are not in a voice channel!')
 
         synthesis_input = texttospeech.types.SynthesisInput(text=text)
-        lang = VOICES[self.store.get_voice(ctx.channel.id, ctx.author.id)]
+        lang = VOICES[self._store.get_voice(ctx.guild.id, ctx.author.id)]
         voice = texttospeech.types.VoiceSelectionParams(language_code=lang, ssml_gender=texttospeech.enums.SsmlVoiceGender.NEUTRAL)
         audio_config = texttospeech.types.AudioConfig(audio_encoding=texttospeech.enums.AudioEncoding.LINEAR16)
-        response = self.client.synthesize_speech(input_=synthesis_input, voice=voice, audio_config=audio_config)
+        response = self._client.synthesize_speech(input_=synthesis_input, voice=voice, audio_config=audio_config)
         
         file_path = f's_{uuid.uuid1()}.mp3'
         with open(file_path, 'wb') as out:
@@ -87,7 +87,7 @@ class TextToSpeech(commands.Cog):
             return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
         if voice_id < 0 or voice_id >= len(VOICES):
             return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
-        self.store.set_voice(ctx.channel.id, ctx.author.id, voice_id)
+        self._store.set_voice(ctx.guild.id, ctx.author.id, voice_id)
 
 
 def setup(bot: commands.Bot):

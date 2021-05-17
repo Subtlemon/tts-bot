@@ -1,3 +1,4 @@
+import os
 import uuid
 
 from audio_sources.composable_pcm import ComposablePCM
@@ -12,6 +13,14 @@ LOCALSTORE_PATH = '.runtime_data/persistence.db'
 VOICES = ['en-US', 'en-AU', 'en-IN', 'ja', 'en-GB']
 
 
+def get_command_prefix():
+    prefix = os.getenv('DEV_CMD')
+    if prefix:
+        return prefix
+    else:
+        return "'"
+
+
 class TextToSpeech(commands.Cog):
     def __init__(self, bot):
         self._bot = bot
@@ -22,7 +31,7 @@ class TextToSpeech(commands.Cog):
     async def on_message(self, message):
         if message.author == self._bot.user:
             return
-        if message.content.startswith("' "):
+        if message.content.startswith(f'{get_command_prefix()} '):
             ctx = await self._bot.get_context(message)
             await self._say(ctx, message.content)
 

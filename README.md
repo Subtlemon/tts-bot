@@ -73,3 +73,11 @@ From the root directory (same directory that this README is in), run:
 ```
 python -m main
 ```
+
+### Overriding the command key
+
+The default command key is `'`. To override this to another character, set the `DEV_CMD` in your env file:
+
+```
+DEV_CMD=!
+```

@@ -8,8 +8,16 @@ load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
 
 
+def get_command_prefix():
+    prefix = os.getenv('DEV_CMD')
+    if prefix:
+        return prefix
+    else:
+        return "'"
+
+
 def main():
-    bot = commands.Bot(command_prefix='\'')
+    bot = commands.Bot(command_prefix=get_command_prefix())
 
     @bot.event
     async def on_ready():

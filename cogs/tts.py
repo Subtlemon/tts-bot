@@ -98,6 +98,11 @@ class TextToSpeech(commands.Cog):
         '''List available voices.'''
         return await ctx.send(', '.join(self._tts_engine.all_voices()))
 
+    @commands.command()
+    async def myvoice(self, ctx: commands.Context):
+        '''List available voices.'''
+        return await ctx.send(f'{ctx.author.name}, your voice is {self._store.get_voice(ctx.guild.id, ctx.author.id)}.')
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(TextToSpeech(bot))

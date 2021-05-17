@@ -14,6 +14,7 @@
 
 * Anaconda3
 * `sudo apt-get install ffmpeg`
+* `sudo apt-get install libopus0`
 
 ### Import environment
 

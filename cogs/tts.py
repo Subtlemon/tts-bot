@@ -48,7 +48,10 @@ class TextToSpeech(commands.Cog):
             await ctx.guild.voice_client.disconnect()
             await ctx.send(f'I am moving to {ctx.author.name}\'s channel.')
         voice_channel = ctx.author.voice.channel
-        await voice_channel.connect()
+        try:
+            await voice_channel.connect()
+        except:
+            pass
 
     @commands.command()
     async def leave(self, ctx: commands.Context):

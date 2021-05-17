@@ -54,8 +54,8 @@ class TextToSpeech(commands.Cog):
         await ctx.guild.voice_client.disconnect()
 
     @commands.command()
-    '''Say text. An empty command will also trigger text-to-speech.'''
     async def say(self, ctx: commands.Context, *, text):
+        '''Say text. An empty command will also trigger text-to-speech.'''
         await self._say(ctx, text)
 
 

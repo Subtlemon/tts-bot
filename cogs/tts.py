@@ -3,7 +3,7 @@ import uuid
 from audio_sources.composable_pcm import ComposablePCM
 from audio_sources.resource_owning_source import ResourceOwningSource
 from command_prefix import get_command_prefix
-from discord import FFmpegPCMAudio
+from discord import FFmpegPCMAudio, Member, VoiceState
 from discord.ext import commands
 from engine.tts_engine import TTSEngine
 from persistence.local_store import LocalStore
@@ -94,6 +94,18 @@ class TextToSpeech(commands.Cog):
     async def myvoice(self, ctx: commands.Context):
         '''Shows what voice you're using.'''
         return await ctx.send(f'{ctx.author.name}, your voice is {self._store.get_voice(ctx.guild.id, ctx.author.id)}.')
+
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member: Member, before: VoiceState, after: VoiceState):
+        if member == self._bot.user:
+            return
+        for voice_client in self._bot.voice_clients:
+            num_members = len(voice_client.channel.members)
+            if before.channel == voice_client.channel and after.channel != voice_client.channel:
+                # Lost a channel member. Check if we have any channel members left.
+                if num_members <= 1:
+                    # Bot is all alone in the channel. Leave now. Also return because no other channels are affected.
+                    return await voice_client.disconnect()
 
 
 def setup(bot: commands.Bot):

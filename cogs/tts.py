@@ -13,6 +13,7 @@ from ratelimit import limits, RateLimitException
 LOCALSTORE_PATH = '.runtime_data/persistence.db'
 MAX_TEXT_SIZE = 160
 MAX_TTS_PER_MINUTE = 60
+RATE_LIMIT_ERROR_MESSAGE = 'Bot is being rate limited. Try again later.'
 
 
 def get_command_prefix():
@@ -38,7 +39,7 @@ class TextToSpeech(commands.Cog):
             try:
                 await self._say(ctx, message.content[2:])
             except RateLimitException:
-                return await ctx.send('Bot is being rate limited. Try again later.')
+                return await ctx.send(RATE_LIMIT_ERROR_MESSAGE)
 
 
     @commands.command()
@@ -64,7 +65,7 @@ class TextToSpeech(commands.Cog):
         try:
             await self._say(ctx, text)
         except RateLimitException:
-            return await ctx.send('Bot is being rate limited. Try again later.')
+            return await ctx.send(RATE_LIMIT_ERROR_MESSAGE)
 
 
     @limits(calls=MAX_TTS_PER_MINUTE, period=60)

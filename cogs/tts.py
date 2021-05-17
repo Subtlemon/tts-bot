@@ -3,6 +3,7 @@ import uuid
 
 from audio_sources.composable_pcm import ComposablePCM
 from audio_sources.resource_owning_source import ResourceOwningSource
+from command_prefix import get_command_prefix
 from discord import FFmpegPCMAudio
 from discord.ext import commands
 from engine.tts_engine import TTSEngine
@@ -14,14 +15,6 @@ LOCALSTORE_PATH = '.runtime_data/persistence.db'
 MAX_TEXT_SIZE = 160
 MAX_TTS_PER_MINUTE = 60
 RATE_LIMIT_ERROR_MESSAGE = 'Bot is being rate limited. Try again later.'
-
-
-def get_command_prefix():
-    prefix = os.getenv('DEV_CMD')
-    if prefix:
-        return prefix
-    else:
-        return "'"
 
 
 class TextToSpeech(commands.Cog):

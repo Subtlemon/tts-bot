@@ -2,18 +2,11 @@ import os
 
 from discord.ext import commands
 from dotenv import load_dotenv
+from command_prefix import get_command_prefix
 
 
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-
-
-def get_command_prefix():
-    prefix = os.getenv('DEV_CMD')
-    if prefix:
-        return prefix
-    else:
-        return "'"
 
 
 def main():

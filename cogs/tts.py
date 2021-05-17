@@ -70,7 +70,6 @@ class TextToSpeech(commands.Cog):
         except RateLimitException:
             return await ctx.send(RATE_LIMIT_ERROR_MESSAGE)
 
-
     @limits(calls=MAX_TTS_PER_MINUTE, period=60)
     async def _say(self, ctx: commands.Context, text):
         if not ctx.author.voice:

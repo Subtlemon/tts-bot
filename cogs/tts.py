@@ -10,7 +10,6 @@ from persistence.local_store import LocalStore
 
 
 LOCALSTORE_PATH = '.runtime_data/persistence.db'
-VOICES = ['en-US', 'en-AU', 'en-IN', 'ja', 'en-GB']
 
 
 def get_command_prefix():
@@ -35,6 +34,7 @@ class TextToSpeech(commands.Cog):
             ctx = await self._bot.get_context(message)
             await self._say(ctx, message.content[2:])
 
+
     @commands.command()
     async def join(self, ctx: commands.Context):
         '''Joins the voice channel of the context's author.'''
@@ -56,6 +56,7 @@ class TextToSpeech(commands.Cog):
     @commands.command()
     async def say(self, ctx: commands.Context, *, text):
         await self._say(ctx, text)
+
 
     async def _say(self, ctx: commands.Context, text):
         if not ctx.author.voice:

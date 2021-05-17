@@ -52,9 +52,9 @@ class TextToSpeech(commands.Cog):
             return await ctx.send('I was not in a voice channel')
 
         await ctx.guild.voice_client.disconnect()
-        await ctx.send('Left voice channel!')
 
     @commands.command()
+    '''Say text. An empty command will also trigger text-to-speech.'''
     async def say(self, ctx: commands.Context, *, text):
         await self._say(ctx, text)
 
@@ -85,12 +85,14 @@ class TextToSpeech(commands.Cog):
 
     @commands.command()
     async def setvoice(self, ctx: commands.Context, voice):
+        '''Sets the voice for your text.'''
         if not self._tts_engine.is_voice_valid(voice):
             return await ctx.send(f'{voice} is not a valid voice. Check the `voices` command for valid voices.')
         self._store.set_voice(ctx.guild.id, ctx.author.id, voice)
 
     @commands.command()
     async def voices(self, ctx: commands.Context):
+        '''List available voices.'''
         return await ctx.send(', '.join(self._tts_engine.all_voices()))
 
 

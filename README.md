@@ -61,6 +61,10 @@ Create a .env file in the root directory and put your token in it:
 DISCORD_TOKEN={your-bot-token}
 ```
 
+### Google Cloud Text-To-Speech
+
+We use the Google Cloud Text-To-Speech API. For local development, download service account credentials following [these instructions](https://cloud.google.com/text-to-speech/docs/libraries#setting_up_authentication) and point the GOOGLE_APPLICATION_CREDENTIALS environment variable to the downloaded file.
+
 ### Run the bot
 
 From the root directory (same directory that this README is in), run:

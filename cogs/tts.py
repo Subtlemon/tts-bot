@@ -7,10 +7,12 @@ from discord import FFmpegPCMAudio
 from discord.ext import commands
 from engine.tts_engine import TTSEngine
 from persistence.local_store import LocalStore
+from ratelimit import limits, RateLimitException
 
 
 LOCALSTORE_PATH = '.runtime_data/persistence.db'
 MAX_TEXT_SIZE = 160
+MAX_TTS_PER_MINUTE = 60
 
 
 def get_command_prefix():
@@ -33,7 +35,10 @@ class TextToSpeech(commands.Cog):
             return
         if message.content.startswith(f'{get_command_prefix()} '):
             ctx = await self._bot.get_context(message)
-            await self._say(ctx, message.content[2:])
+            try:
+                await self._say(ctx, message.content[2:])
+            except RateLimitException:
+                return await ctx.send('Bot is being rate limited. Try again later.')
 
 
     @commands.command()
@@ -56,9 +61,13 @@ class TextToSpeech(commands.Cog):
     @commands.command()
     async def say(self, ctx: commands.Context, *, text):
         '''Say text. An empty command will also trigger text-to-speech.'''
-        await self._say(ctx, text)
+        try:
+            await self._say(ctx, text)
+        except RateLimitException:
+            return await ctx.send('Bot is being rate limited. Try again later.')
 
 
+    @limits(calls=MAX_TTS_PER_MINUTE, period=60)
     async def _say(self, ctx: commands.Context, text):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')

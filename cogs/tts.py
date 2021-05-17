@@ -4,18 +4,18 @@ from audio_sources.composable_pcm import ComposablePCM
 from audio_sources.resource_owning_source import ResourceOwningSource
 from discord import FFmpegPCMAudio
 from discord.ext import commands
-from gtts import gTTS
+from google.cloud import texttospeech
 from persistence.local_store import LocalStore
 
 
 LOCALSTORE_PATH = '.runtime_data/persistence.db'
-VOICES = ['en', 'fr', 'it', 'ja']
-
+VOICES = ['en-US', 'en-AU', 'en-IN', 'ja', 'en-GB']
 
 
 class TextToSpeech(commands.Cog):
     def __init__(self, bot):
         self._bot = bot
+        self._client = texttospeech.TextToSpeechClient()
         self._store = LocalStore(LOCALSTORE_PATH)
 
     @commands.Cog.listener()
@@ -54,9 +54,15 @@ class TextToSpeech(commands.Cog):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')
 
-        speech = gTTS(text, lang=VOICES[self._store.get_voice(ctx.guild.id, ctx.author.id)])
+        synthesis_input = texttospeech.types.SynthesisInput(text=text)
+        lang = VOICES[self._store.get_voice(ctx.guild.id, ctx.author.id)]
+        voice = texttospeech.types.VoiceSelectionParams(language_code=lang, ssml_gender=texttospeech.enums.SsmlVoiceGender.NEUTRAL)
+        audio_config = texttospeech.types.AudioConfig(audio_encoding=texttospeech.enums.AudioEncoding.LINEAR16)
+        response = self._client.synthesize_speech(input_=synthesis_input, voice=voice, audio_config=audio_config)
+        
         file_path = f's_{uuid.uuid1()}.mp3'
-        speech.save(file_path)
+        with open(file_path, 'wb') as out:
+            out.write(response.audio_content)
         new_source = ResourceOwningSource(FFmpegPCMAudio(file_path), file_path)
 
         voice_channel = ctx.author.voice.channel

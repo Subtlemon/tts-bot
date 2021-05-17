@@ -1,0 +1,78 @@
+{
+    "__source__": "https://cloud.google.com/text-to-speech/docs/voices",
+    "default": {
+        "language_code": "en-US",
+        "name": "en-US-Wavenet-B",
+        "gender": "MALE"
+    },
+    "david": {
+        "language_code": "en-US",
+        "name": "en-US-Wavenet-B",
+        "gender": "MALE"
+    },
+    "sirdavid": {
+        "language_code": "en-GB",
+        "name": "en-GB-Wavenet-B",
+        "gender": "MALE"
+    },
+    "janice": {
+        "language_code": "en-US",
+        "name": "en-US-Wavenet-F",
+        "gender": "FEMALE"
+    },
+    "sirjanice": {
+        "language_code": "en-GB",
+        "name": "en-GB-Wavenet-F",
+        "gender": "FEMALE"
+    },
+    "siddharth": {
+        "language_code": "en-IN",
+        "name": "en-IN-Wavenet-C",
+        "gender": "MALE"
+    },
+    "pooja": {
+        "language_code": "en-IN",
+        "name": "en-IN-Wavenet-A",
+        "gender": "FEMALE"
+    },
+    "yukichan": {
+        "language_code": "ja-JP",
+        "name": "ja-JP-Wavenet-A",
+        "gender": "FEMALE"
+    },
+    "fumiyasan": {
+        "language_code": "ja-JP",
+        "name": "ja-JP-Wavenet-D",
+        "gender": "MALE"
+    },
+    "putin": {
+        "language_code": "ru-RU",
+        "name": "ru-RU-Wavenet-D",
+        "gender": "MALE"
+    },
+    "jesus": {
+        "language_code": "es-US",
+        "name": "es-US-Wavenet-B",
+        "gender": "MALE"
+    },
+    "estelle": {
+        "language_code": "fr-FR",
+        "name": "fr-FR-Wavenet-CB",
+        "gender": "FEMALE"
+    },
+    "hans": {
+        "language_code": "de-DE",
+        "name": "de-DE-Wavenet-B",
+        "gender": "MALE"
+    },
+    "rosa": {
+        "language_code": "it-IT",
+        "name": "it-IT-Wavenet-A",
+        "gender": "FEMALE"
+    },
+    "luigi": {
+        "language_code": "it-IT",
+        "name": "it-IT-Wavenet-D",
+        "gender": "MALE"
+    }
+}

@@ -5,7 +5,7 @@ from audio_sources.composable_pcm import ComposablePCM
 from audio_sources.resource_owning_source import ResourceOwningSource
 from discord import FFmpegPCMAudio
 from discord.ext import commands
-from google.cloud import texttospeech
+from engine.tts_engine import TTSEngine
 from persistence.local_store import LocalStore
 
 
@@ -24,7 +24,7 @@ def get_command_prefix():
 class TextToSpeech(commands.Cog):
     def __init__(self, bot):
         self._bot = bot
-        self._client = texttospeech.TextToSpeechClient()
+        self._tts_engine = TTSEngine()
         self._store = LocalStore(LOCALSTORE_PATH)
 
     @commands.Cog.listener()
@@ -33,7 +33,7 @@ class TextToSpeech(commands.Cog):
             return
         if message.content.startswith(f'{get_command_prefix()} '):
             ctx = await self._bot.get_context(message)
-            await self._say(ctx, message.content)
+            await self._say(ctx, message.content[2:])
 
     @commands.command()
     async def join(self, ctx: commands.Context):
@@ -44,7 +44,6 @@ class TextToSpeech(commands.Cog):
         voice_channel = ctx.author.voice.channel
         await voice_channel.connect()
 
-
     @commands.command()
     async def leave(self, ctx: commands.Context):
         '''Leaves current voice channel.'''
@@ -54,7 +53,6 @@ class TextToSpeech(commands.Cog):
         await ctx.guild.voice_client.disconnect()
         await ctx.send('Left voice channel!')
 
-
     @commands.command()
     async def say(self, ctx: commands.Context, *, text):
         await self._say(ctx, text)
@@ -63,15 +61,9 @@ class TextToSpeech(commands.Cog):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')
 
-        synthesis_input = texttospeech.types.SynthesisInput(text=text)
-        lang = VOICES[self._store.get_voice(ctx.guild.id, ctx.author.id)]
-        voice = texttospeech.types.VoiceSelectionParams(language_code=lang, ssml_gender=texttospeech.enums.SsmlVoiceGender.NEUTRAL)
-        audio_config = texttospeech.types.AudioConfig(audio_encoding=texttospeech.enums.AudioEncoding.LINEAR16)
-        response = self._client.synthesize_speech(input_=synthesis_input, voice=voice, audio_config=audio_config)
-        
         file_path = f's_{uuid.uuid1()}.mp3'
-        with open(file_path, 'wb') as out:
-            out.write(response.audio_content)
+        voice = self._store.get_voice(ctx.guild.id, ctx.author.id)
+        self._tts_engine.text_to_speech(text, voice, file_path)
         new_source = ResourceOwningSource(FFmpegPCMAudio(file_path), file_path)
 
         voice_channel = ctx.author.voice.channel
@@ -87,16 +79,15 @@ class TextToSpeech(commands.Cog):
                 voice.stop()
                 voice.play(ComposablePCM(new_source))
 
+    @commands.command()
+    async def setvoice(self, ctx: commands.Context, voice):
+        if not self._tts_engine.is_voice_valid(voice):
+            return await ctx.send(f'{voice} is not a valid voice. Check the `voices` command for valid voices.')
+        self._store.set_voice(ctx.guild.id, ctx.author.id, voice)
 
     @commands.command()
-    async def setvoice(self, ctx: commands.Context, voice_id_str):
-        try:
-            voice_id = int(voice_id_str)
-        except ValueError:
-            return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
-        if voice_id < 0 or voice_id >= len(VOICES):
-            return await ctx.send(f'You provided an invalid voice ID. There are {len(VOICES)} voices.')
-        self._store.set_voice(ctx.guild.id, ctx.author.id, voice_id)
+    async def voices(self, ctx: commands.Context):
+        return await ctx.send(', '.join(self._tts_engine.all_voices()))
 
 
 def setup(bot: commands.Bot):

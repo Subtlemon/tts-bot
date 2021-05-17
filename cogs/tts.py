@@ -65,6 +65,8 @@ class TextToSpeech(commands.Cog):
     async def _say(self, ctx: commands.Context, text):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')
+        if ctx.guild.voice_client is not None and ctx.author.voice.channel.id != ctx.guild.voice_client.channel.id:
+            return await ctx.send('You are not in the same voice channel as me!')
         if len(text) > MAX_TEXT_SIZE:
             return await ctx.send(f'Text cannot be longer than {MAX_TEXT_SIZE} characters.')
 

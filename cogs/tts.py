@@ -100,7 +100,7 @@ class TextToSpeech(commands.Cog):
 
     @commands.command()
     async def myvoice(self, ctx: commands.Context):
-        '''List available voices.'''
+        '''Shows what voice you're using.'''
         return await ctx.send(f'{ctx.author.name}, your voice is {self._store.get_voice(ctx.guild.id, ctx.author.id)}.')
 
 

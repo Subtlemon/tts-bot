@@ -10,6 +10,7 @@ from persistence.local_store import LocalStore
 
 
 LOCALSTORE_PATH = '.runtime_data/persistence.db'
+MAX_TEXT_SIZE = 160
 
 
 def get_command_prefix():
@@ -61,6 +62,8 @@ class TextToSpeech(commands.Cog):
     async def _say(self, ctx: commands.Context, text):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')
+        if len(text) > MAX_TEXT_SIZE:
+            return await ctx.send(f'Text cannot be longer than {MAX_TEXT_SIZE} characters.')
 
         file_path = f's_{uuid.uuid1()}.mp3'
         voice = self._store.get_voice(ctx.guild.id, ctx.author.id)

@@ -2,12 +2,12 @@
     "__source__": "https://cloud.google.com/text-to-speech/docs/voices",
     "default": {
         "language_code": "en-US",
-        "name": "en-US-Wavenet-B",
+        "name": "en-US-Wavenet-J",
         "gender": "MALE"
     },
     "david": {
         "language_code": "en-US",
-        "name": "en-US-Wavenet-B",
+        "name": "en-US-Wavenet-J",
         "gender": "MALE"
     },
     "sirdavid": {
@@ -52,7 +52,7 @@
     },
     "jesus": {
         "language_code": "es-US",
-        "name": "es-US-Wavenet-B",
+        "name": "es-US-Wavenet-C",
         "gender": "MALE"
     },
     "estelle": {
@@ -74,5 +74,15 @@
         "language_code": "it-IT",
         "name": "it-IT-Wavenet-D",
         "gender": "MALE"
+    },
+    "mao": {
+        "language_code": "cmn-TW",
+        "name": "cmn-TW-Wavenet-C",
+        "gender": "MALE"
+    },
+    "mulan": {
+        "language_code": "cmn-TW",
+        "name": "cmn-TW-Wavenet-A",
+        "gender": "FEMALE"
     }
 }

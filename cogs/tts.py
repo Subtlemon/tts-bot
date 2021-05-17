@@ -41,6 +41,12 @@ class TextToSpeech(commands.Cog):
         if not ctx.author.voice:
             return await ctx.send('You are not in a voice channel!')
 
+        if ctx.guild.voice_client is not None and ctx.author.voice.channel.id != ctx.guild.voice_client.channel.id:
+            # Bot is in a different channel than the author.
+            if ctx.guild.voice_client.is_playing():
+                ctx.guild.voice_client.stop()
+            await ctx.guild.voice_client.disconnect()
+            await ctx.send(f'I am moving to {ctx.author.name}\'s channel.')
         voice_channel = ctx.author.voice.channel
         await voice_channel.connect()
 

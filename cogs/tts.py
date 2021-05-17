@@ -1,4 +1,3 @@
-import os
 import uuid
 
 from audio_sources.composable_pcm import ComposablePCM
@@ -12,7 +11,9 @@ from ratelimit import limits, RateLimitException
 
 
 LOCALSTORE_PATH = '.runtime_data/persistence.db'
+# Max size of a text-to-speech message.
 MAX_TEXT_SIZE = 160
+# Max number of text-to-speech requests every minute.
 MAX_TTS_PER_MINUTE = 60
 RATE_LIMIT_ERROR_MESSAGE = 'Bot is being rate limited. Try again later.'
 
@@ -89,13 +90,13 @@ class TextToSpeech(commands.Cog):
             await voice_channel.connect()
         except:
             pass
-        voice = ctx.guild.voice_client
-        if not voice.is_playing():
-            voice.play(ComposablePCM(new_source))
+        voice_client = ctx.guild.voice_client
+        if not voice_client.is_playing():
+            voice_client.play(ComposablePCM(new_source))
         else:
-            if not voice.source.add_source(new_source):
-                voice.stop()
-                voice.play(ComposablePCM(new_source))
+            if not voice_client.source.add_source(new_source):
+                voice_client.stop()
+                voice_client.play(ComposablePCM(new_source))
 
     @commands.command()
     async def setvoice(self, ctx: commands.Context, voice):

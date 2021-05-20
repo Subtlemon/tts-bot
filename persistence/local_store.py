@@ -9,7 +9,10 @@ class LocalStore:
 
     def get_voice(self, guild_id: int, user_id: int) -> str:
         key = f'{guild_id}:{user_id}:voice'
-        return self._db.get(key)
+        voice = self._db.get(key)
+        if not voice:
+            return 'default'
+        return voice
 
     def set_voice(self, guild_id: int, user_id: int, voice: str) -> int:
         key = f'{guild_id}:{user_id}:voice'

@@ -56,8 +56,8 @@
         "gender": "MALE"
     },
     "estelle": {
-        "language_code": "fr-FR",
-        "name": "fr-FR-Wavenet-CB",
+        "language_code": "fr-CA",
+        "name": "fr-CA-Wavenet-C",
         "gender": "FEMALE"
     },
     "hans": {
@@ -75,14 +75,24 @@
         "name": "it-IT-Wavenet-D",
         "gender": "MALE"
     },
+    "mulan": {
+        "language_code": "cmn-TW",
+        "name": "cmn-TW-Wavenet-A",
+        "gender": "FEMALE"
+    },
     "mao": {
         "language_code": "cmn-TW",
         "name": "cmn-TW-Wavenet-C",
         "gender": "MALE"
     },
-    "mulan": {
-        "language_code": "cmn-TW",
-        "name": "cmn-TW-Wavenet-A",
+    "l'mao": {
+        "language_code": "vi-VN",
+        "name": "vi-VN-Wavenet-B",
+        "gender": "MALE"
+    },
+    "maria": {
+        "language_code": "fil-PH",
+        "name": "fil-PH-Wavenet-B",
         "gender": "FEMALE"
     }
 }

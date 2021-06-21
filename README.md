@@ -60,7 +60,10 @@ Create a .env file in the root directory and put your token in it:
 # .env
 DISCORD_TOKEN={your-bot-token}
 GOOGLE_APPLICATION_CREDENTIALS={path to key file}
+TTS_SPECIAL_CLIENT_URL={URL for the special client's HTTP endpoint}
 ```
+
+If `TTS_SPECIAL_CLIENT_URL` is unset, special voices will be disabled and removed from the list of voices.
 
 ### Google Cloud Text-To-Speech
 

@@ -94,5 +94,8 @@
         "language_code": "fil-PH",
         "name": "fil-PH-Wavenet-B",
         "gender": "FEMALE"
+    },
+    "oliver": {
+        "special": "true"
     }
 }

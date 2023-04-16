@@ -108,5 +108,5 @@ class TextToSpeech(commands.Cog):
                     return await voice_client.disconnect()
 
 
-def setup(bot: commands.Bot):
-    bot.add_cog(TextToSpeech(bot))
+async def setup(bot: commands.Bot):
+    await bot.add_cog(TextToSpeech(bot))

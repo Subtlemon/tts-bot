@@ -16,9 +16,9 @@ def main():
 
     @bot.event
     async def on_ready():
+        await bot.load_extension('cogs.tts')
         print(f'Bot has logged in as {bot.user}.')
 
-    bot.load_extension('cogs.tts')
     bot.run(TOKEN)
 
 

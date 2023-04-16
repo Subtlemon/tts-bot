@@ -31,12 +31,12 @@ class TTSEngine:
         if is_special:
             response_audio = self._special_client.tts(text, name=voice)
         else:
-            synthesis_input = texttospeech.types.SynthesisInput(text=text)
-            voice = texttospeech.types.VoiceSelectionParams(language_code=voice_spec['language_code'], 
+            synthesis_input = texttospeech.SynthesisInput(text=text)
+            voice = texttospeech.VoiceSelectionParams(language_code=voice_spec['language_code'], 
                                                             name=voice_spec['name'],
                                                             ssml_gender=self._to_gender_enum(voice_spec['gender']))
-            audio_config = texttospeech.types.AudioConfig(audio_encoding=texttospeech.enums.AudioEncoding.LINEAR16)
-            response = self._client.synthesize_speech(input_=synthesis_input, voice=voice, audio_config=audio_config)
+            audio_config = texttospeech.AudioConfig(audio_encoding=texttospeech.AudioEncoding.LINEAR16)
+            response = self._client.synthesize_speech(input=synthesis_input, voice=voice, audio_config=audio_config)
             response_audio = response.audio_content
         
         with open(output_file_path, 'wb') as out:
@@ -50,8 +50,8 @@ class TTSEngine:
 
     def _to_gender_enum(self, gender: str):
         if gender == 'MALE':
-            return texttospeech.enums.SsmlVoiceGender.MALE
+            return texttospeech.SsmlVoiceGender.MALE
         elif gender == 'FEMALE':
-            return texttospeech.enums.SsmlVoiceGender.FEMALE
+            return texttospeech.SsmlVoiceGender.FEMALE
         else:
-            return texttospeech.enums.SsmlVoiceGender.NEUTRAL
+            return texttospeech.SsmlVoiceGender.NEUTRAL
